@@ -1,0 +1,45 @@
+---
+- name: Upgrade the OS (apt-get dist-upgrade)
+  become: true
+  apt:
+    upgrade: dist
+
+- name: Update all packages to their latest version
+  become: true
+  apt:
+    name: "*"
+    state: latest
+
+- name: Install make
+  become: true
+  apt:
+    name: make
+    state: latest
+
+- name: Set usercfg.txt file
+  become: true
+  copy:
+    src: ../templates/usercfg.txt
+    dest: /boot/firmware/usercfg.txt
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Set cmdline.txt file
+  become: true
+  copy:
+    src: ../templates/cmdline.txt
+    dest: /boot/firmware/cmdline.txt
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: reboot server
+  become: true
+  reboot:
+    reboot_timeout: 600
+    test_command: uptime
+  register: reboot
+
+- debug:
+    msg: "{{ reboot }}"

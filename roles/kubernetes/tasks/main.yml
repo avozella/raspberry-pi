@@ -1,0 +1,31 @@
+---
+- name: Copy scripts
+  copy:
+    src: ../scripts/makefile
+    dest: /tmp
+    mode: '0644'
+
+- name: Install K3s
+  make:
+    chdir: /tmp
+    target: install
+  become: true
+
+- name: Validate K3s Version
+  make:
+    chdir: /tmp
+    target: validate
+  register: k3s_version
+
+- debug:
+    msg: "{{ k3s_version }}"
+
+- name: Get node-token
+  become: true
+  make:
+    chdir: /tmp
+    target: get_token
+  register: token
+
+- debug:
+    msg: "{{ token }}"

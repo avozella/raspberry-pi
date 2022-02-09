@@ -1,0 +1,6 @@
+---
+- name: Setup Raspberry Pi
+  hosts: all
+  roles:
+    - setup
+    - kubernetes
